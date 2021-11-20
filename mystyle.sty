@@ -1,0 +1,108 @@
+\ProvidesPackage{mystyle}
+
+%Encoding and font settings
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{ragged2e}
+\usepackage{textcomp}
+
+%Setting-up hyperlinking
+\usepackage{hyperref}
+\hypersetup{
+    bookmarks=true,         % show bookmarks bar?
+    unicode=false,          % non-Latin characters in Acrobat’s bookmarks
+    pdftitle={Introduction to SCION},    % title
+    pdfauthor={S. Farner},     % author
+    pdfnewwindow=true,      % links in new PDF window
+    colorlinks=true,       % false: boxed links; true: colored links
+    citecolor=black,        % color of links to bibliography
+    urlcolor=black,          % color of external links
+    linkcolor=black
+}
+
+%Language settings
+%\usepackage[german]{babel}
+
+%Bibliography and refecences
+\usepackage[backend=biber, style=ieee,]{biblatex}
+\addbibresource{eva1_scion.bib}
+\usepackage[style=english,autopunct=true]{csquotes}
+\MakeOuterQuote{"}
+\usepackage[toc,acronyms]{glossaries}
+\makeglossary
+\input{glossary.tex}
+
+\usepackage{fancyref}
+
+%Tabels and idicies
+\usepackage{tabularx}
+\usepackage[inline]{enumitem}
+\usepackage[table,dvipsnames]{xcolor}
+
+%modularisation and inclusion
+\usepackage{subfiles}
+%\usepackage[final]{pdfpages}
+
+%Math settings
+%\usepackage{leqno}
+%\usepackage{amsmath}
+
+%Handling graphics
+\usepackage[]{graphicx}
+\usepackage{wrapfig}
+\usepackage[font=small]{caption}
+\usepackage{subcaption}
+\usepackage{tikz}
+\graphicspath{ {./img/}{../img/} }
+\usepackage[export]{adjustbox}
+\usepackage{rotating}
+
+
+%actual document informatiof
+\author{Farner Simon}
+\title{Introduction to SCION}
+\date{\today}
+
+%signing box
+\newcommand{\namesigdatehrule}[1]{\par\tikz \draw [black, densely dotted, ultra thick] (0,0) -- (#1,0);\par}
+\newcommand{\namesigdate}[2][5cm]{%
+\begin{minipage}{#1}%
+    \vspace{0.5cm}
+    #2 \vspace{1.0cm}\namesigdatehrule{#1}\smallskip
+    \small \noindent\textit{Ort/Datum}
+    \vspace{1.0cm}\namesigdatehrule{#1}\smallskip
+    \small \textit{Signature}
+\end{minipage}
+}
+
+%set paper margins
+\usepackage{geometry}
+\geometry{paper=a4paper, top=2.0cm, bottom=2.0cm, left=2.5cm, right=2.5cm }
+
+%set headings
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhead{}
+\fancyhead[LO,LE]{Introduction to SCION}
+\fancyfoot{}
+\fancyfoot[RO,RE]{\thepage}
+\fancyfoot[LO,LE]{S.Farner}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\fancypagestyle{plain}{
+\fancyhead{}
+\fancyhead[LO,LE]{Introduction to SCION}
+\fancyfoot{}
+\fancyfoot[RO,RE]{\thepage}
+\fancyfoot[LO,LE]{S.Farner}
+\renewcommand{\headrulewidth}{0.4pt}
+}
+
+\fancypagestyle{frontpage}{
+\fancyhead{}
+\rhead{\includegraphics[width=3cm]{zhawlogo}}
+\fancyfoot{}
+\renewcommand{\headrulewidth}{0.0pt}
+}
+
+%\usepackage{emptypage}

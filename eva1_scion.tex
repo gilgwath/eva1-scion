@@ -1,0 +1,48 @@
+% File: bericht.tex
+
+\documentclass[11pt,twoside,openright]{report}
+
+\usepackage{mystyle}
+
+
+\begin{document}
+
+    \subfile{tex/titlepage}
+    \subfile{tex/declaration}
+
+\pagenumbering{roman}
+   
+\newgeometry{paper=a4paper, width=150mm, top=3.0cm, bottom=3.0cm, bindingoffset=6mm}
+    
+    \subfile{tex/abstract}
+
+    %Table of contense
+    \setcounter{tocdepth}{2}
+    \tableofcontents
+
+    %Chapters
+    \subfile{tex/introduction}
+
+    \chapter{Indicies}
+    \begingroup
+        \let\clearpage\relax
+	\addcontentsline{toc}{section}{Literature}
+        \printbibliography
+	\addcontentsline{toc}{section}{\listfigurename}
+        \listoffigures
+	\addcontentsline{toc}{section}{\listtablename}
+        \listoftables
+	\setglossarysection{section}
+	\printglossary[type=\acronymtype]
+	\printglossary
+        \let\clearpage\relax
+    \endgroup
+
+    %\appendix
+    %\pagenumbering{roman}
+    %\setcounter{page}{0}
+
+    %\begin{appendix}
+    %\end{appendix}
+
+\end{document}
