@@ -1,0 +1,31 @@
+\documentclass[../eva1_scion.tex]{subfiles}
+\begin{document}
+\chapter{Problem Analysis}\label{ch:analysis}
+
+Many protocols and technologies are involved in transporting information from point A to point B in a computer network. However, the core protocols and services which make our modern connected world tick and thus constitute what we will call the global internet, may be narrowed down to the following:
+
+\begin{itemize}
+    \item Internet Protocol (IP): Provides adressing of devices.
+    \item Border Gateway Protocol (BGP): Provides forwarding and path discovery between networks.
+    \item Domain Name System (DNS): Provides resolution between domain names and ip addresses.
+    \item Public Key Infrastructure (PKI): Provides cryptographic binding between names and entities.
+\end{itemize}
+
+Now that we know what set of technologies we include in the discussion, it must also be definded what measures of quality we are concerned with and what the expectations are regarding these quality measures. Here again there are plenty of metrics to choos from. However, from a security point of view the classic security metrics integrity, confidentiality
+
+
+Any disruptions to these services, can cause major degredation of service quality for larg parts of the global internet.  These protocols an services have only evolved little, which on one hand is a testament to the relative foresight and designe rigour applied by their creators, on the other hand are they no longer up to task of managing todays scale and complexity of the global internet and the modern threat landscape. This becomes evident by the comparetativey low availablity of the internet. XY calculates the availability fo the internet at 99.9 \%. Which might seem high at first, but actually amounts to an average downtime of xx seconds per day. This is shockingly low compared to other infrastructure systems like the plain old telephone system, with an availability of 99.9999 \%. 
+
+The possible reasons why parts of the global internet or individual resources may be unreachable are manyfold however here are some major ones:
+
+\begin{itemize}
+    \item Denial of servica attacks
+    \item Disruptions in DNS
+    \item BGP route high jacking
+    \item BGP route missconfiguration
+    \item Physical route failures
+\end{itemize}
+
+The compromise or coruption of ceritificate authority and with it the compromise of the roots of trust which they provide do not directly impact the availabilty of the internet, however it has adverse effects on qualities, and needs mentioning in this context as well.
+
+\
