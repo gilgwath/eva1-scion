@@ -7,6 +7,13 @@
     \subsection{IDS structure}
     As shown in ilustration \ref{fig:isd}a the main structure of an IDS is an undirected graph formed by a set of core ASes in the ISD core, client ASes and biderectional links between individual ASes. ASes may be connected by multiple redundant links. Although a link always carries biderctional traffic, there is an implied top down hirarchy of providers and consumers between the tiers in the graph. As in BGP a pair of ASes may enter an peering agreement, which is ilustrated is a dashed line. Links are also called path segments.
 
+    \begin{figure}[ht]
+        \centering
+        \includegraphics[width=0.8\linewidth]{scion_isd.png}
+        \caption{Internal structure of an ISD. From \cite{scion_2017}}%
+        \label{fig:isd}
+    \end{figure}
+
     \subsection{AS and ISD Componants}
     In the following we will explore the componantes which are required to run an SCION AS and by extension a ISD since a single core AS is sufficient to form an IDS.
 
@@ -15,13 +22,6 @@
     A core AS differs from other ASes in serveral important aspects. First of all core ASes have border routers which are connected to cores ASes in neighbouring. The beacon servers in the core ASes also take part in inter IDS beaconing (see section \ref{ssec:beaconing}), thus their path servers also hold path information on how to reach neighbouring ASes. Further more the ISD core is responsible for maintaining the trust root configuration (TRC).
 
     The trust root configuration (TRC) is policy which governs the operations of an ISD. The TRC lists the trust roots used in an ISD and thus is the central anchor of trust in an IDS. It is negotiated between the members of the ISD core and all ASes whishing to join  an ISD need to accept the TRC. Neighbouring ISDs acknowledge an ISDs TRC by signing it. This makes ASes communicting across ISD bordes able to trust signatures originating from an neighouring ISD. 
-
-    \begin{figure}[h]
-        \centering
-        \includegraphics[width=0.8\linewidth]{scion_isd.png}
-        \caption{Internal structure of an ISD. From \cite{scion_2017}}%
-        \label{fig:isd}
-    \end{figure}
 
     Until now we looked at the static componants which make up an ISD, however the real world internet is not a static thing, so an ISD isn't either. To better manage complexity SCION is devided into a controll plane and a data plane. The control plane is concerned with discovering and maintaining paths, while the data plane uses these paths in the processes of path assembly and packet fowarding.
 
@@ -33,16 +33,27 @@
 
     PCBs traveling down collect what are called down paths, but since all paths forward packets bidirectionally, each down-segment can be converted into an up-segment by inverting the order or traversed ASes. Once an AS has received a number of path segments it can register some of them as down-paths segmemts with the core path servers. This has two important consequences:  An AS always knows how to reach its ISD core by creating recoding path segments from PCBs, however for a local path server to optain down-paths to other ASes it needs to query the a path server in the core. This gives each AS the unique ability to control by which paths it would whishes to be reached.
 
-    Selecting down-paths to register with the
-
-
-
+    When selecting down-paths an AS tries to select as diverse paths as possible in order reach maximum reduncy. This makes SCION an ineherently multipathed system. Apart from diversity, ASes can select for many different quality measure in their paths like low latency or anonymous forwarding
 
     \section{Data Plane}
+    While the control plane deals with path discovery, the data plane deals with forwarding data. For this the data plane uses the path information supplied by the control plane to assemble paths.
 
-    \subsection{Path Assembly} \label{ssec:path_assembly}
-    \subsection{Data Forwading}
+    \subsection{Packet Carried Forwarding State}
+    In SCION information need for routing a given package is stored in the packet itselfs. This is refered to as package carried forwarding state (PCFS) and several interessting properties of SCION a derived from this. A packet at least contains a path, since source and destination adresses are optional, if the path is unambigous in its contetxt. Consequently, during forwarding, a router reads only the path information, in order to forward the packet to the next AS. Since all routing information is carried by the packet, the need for routing tables is completly eliminated. The split into a locator (the path) and an identifier (the destination address), facilitates another interessting feature of: Only the destanation AS needs to be able to interpret the destination address. This allows each AS to choos its own addressing schema. This means that e.g IPv4 and IPv6 hosts can talk directly to each other using scion.
+
+    The absence of routing tables simplyfies the routings process and thus allows the construction of simpler and more energy efficient machines. XY have observed a gain of xx  energy efficiency compared to traditional BGP routing. Thanks to hardware accelration of cryptographic opertions through technologies like Intel AES-NI, forwarding descissions in SCION become faster than in BGP. All a router needs to do is checking the validity of the path recorded in the packet and read the exit interface from it. If hardware acceleration is available the signature validition is so efficient, it out performs DRAM look-ups a BGP router needs to performe to reach its routing decission. 
+
+    \subsection{Path Combination} \label{ssec:path_assembly}
+    Path combination is the process performed by an end host to obtain valid before sending a packet. Up three path-segments are combined into an end-to-end path. First of all tho end host looks up the AS and address of the destination with a name server. Then it queries a path server for a path to this destination. After look-up one of five scenarios will play out:
+    \begin{itemize}
+        \item \textbf{On path} (as shown in figure \ref{fig:isd}a $A \rightarrow E$) the destination lies directly on the up-path to the ISD core.
+        \item \textbf{Direct combination} (as shown in figure \ref{fig:isd}a $B \rightarrow D$) The path can be constructed by chaning a complete up-segment with a down segment. The up- and down-segment intersect in a core AS.
+        \item \textbf{AS shortcut} (as shown in figure \ref{fig:isd}a $B \rightarrow C$) This scenario is similar to the direct combination but the destination lies on down-segment which intersects the up-segment in a none core AS on the way to the ISD core.The unused segments up to the ISD cor and back down are cut off.
+        \item \textbf{Core path combination} (as shown in fuger \ref{fig:isd}a $A \rightarrow D$) A up and down path do not intersect at any point and need to be connected by a core path. This can either be an intra ISD or inter ISD path. This is one of two ways of traversing ISD borders.
+        \item \textbf{Peering shortcut} (as shown in fuger \ref{fig:isd}a $A \rightarrow B$) The up-segment and the down segment are connected by a peering link, such that the peering link alows a shortcut to the destination. Analogous to the AS shortcut in this case the extranous path segments are discarded as well. Note that this type of shortcut can also traverse ISD borders.
+    \end{itemize}
     
+    One the host has constructed a path it is encoded as PCFS in the packet header. The destination host can either take the path contained it the received packet and simply reverse it, or performe its own lookup and combination process. Of course this process is assisted by varous cashing mechanisms 
     \section{Trust Management}
     \subsection{Trust agility}
     \section{SCION Adoption}
