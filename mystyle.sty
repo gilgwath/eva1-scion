@@ -90,12 +90,13 @@
 \renewcommand{\headrulewidth}{0.4pt}
 
 \fancypagestyle{plain}{
-\fancyhead{}
-\fancyhead{Introduction to SCION}
-\fancyfoot{}
-\fancyfoot{\thepage}
-\fancyfoot{S.Farner}
-\renewcommand{\headrulewidth}{0.4pt}
+    \fancyhead{}
+    \fancyhead[RO]{S.Farner}
+    \fancyhead[LO]{\today}
+    \fancyhead[CO]{Introduction to SCION}
+    \fancyfoot{}
+    \fancyfoot[CO]{\thepage}
+    \renewcommand{\headrulewidth}{0.4pt}
 }
 
 \fancypagestyle{frontpage}{
@@ -104,5 +105,3 @@
 \fancyfoot{}
 \renewcommand{\headrulewidth}{0.0pt}
 }
-
-%\usepackage{emptypage}

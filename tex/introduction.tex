@@ -4,35 +4,10 @@
 \setcounter{page}{1}
 \pagenumbering{arabic}
 
-Todays world is not only unimaginable without technology, it is also grows ever more connected. From our basic utilities, to public transport, our personal devices right down to light bulbs, everything is connected to the internet. Since it's inception in the in the 1970s the internet has permiated through all aspects of our lives and thus is an indispensable part of what makes our modern and connectod society and industries possible. One could go as far as to say that the internet has become the backbone of our modern society. However with the ever greater scale of this global network, it has become brittle. A chain of well publicsed outages demonstrates this clearly. The outage at Facebook on \textbf{TODO} is only the most rescent which springs to mind.
+Todays world is extremely connected and almost every branch of live heavily depends on the constant availability and security of data connections. What the social and economic inpact of an just a brief and local outage is, is hard to tell and becomes even harder to grasp if one considers a global outage going on for hourse or days at a time. As individuals we seldomly experience outages, which may lead one to the assumption that the internet is a reliable and highly available construct. However, upon closer inspection we are forced to the conclusion that it is neither enigneered with that goal in mind, nor does it provide this quality an practice. Further more, at least since the Snowden revelations, we also know that security, privacy and trust are in even more fragile state than the internets availability.
 
-When the internet and its core protocols were designed nobody cloud imagine the eventual scale it would reach, also solving the technical challenge of connecting computers over long distances reliably took presedence over matters like security and efficiency. In fact getting it to work at all was seen as a major achievement. By the early 1990s the internet as we know it today has come together. Since then it has evolved little and if so reluctantly. As a consequence todays protocols are no longer up to the task of managiging the scale and complexity of the internet, nor navigating the modern threat landscape.
+These shortcommings are deeply rooted in the arichtecture of the internet, since it has now grown far beyond the wildest assumptions at time of its insception in the 1970s. When the internet and its core protocols were designed nobody cloud imagine the eventual scale it would reach, also solving the technical challenge of connecting computers over long distances reliably took presedence over matters like security and efficiency. In fact getting it to work at all was seen as a major achievement. By the early 1990s the internet as we know it today has come together. Since then it has evolved little and if so reluctantly. As a consequence todays protocols are no longer up to the task of managiging the scale and complexity of the internet, nor navigating the modern threat landscape.
 
-Inthis paper we give an introduction to \textit{scalabilitiy, control, and isolation on next-generation networks} also known as \textit{ SCION }. A project which aims to provide a clean slate reengineering of the core interntet infrastructure, in order to solve some of the most pressing concerns which plauge the modern global internet.
-
-This paper will outline inherent shortcommings of the current  internet architecture and examine how SCION proposes to solve said challanges. We will explore the concepts contained in the proposed solution as well, as comparing SCION to the existing protocol.
-
-The core protocols and services which make our modern connected world tick may be narrowed down to the following:
-
-\begin{enumerate}
-    \item Internet Protocol (IP): Provides adressing of devices.
-    \item Border Gateway Protocol (BGP): Provides forwarding and path discovery between networks.
-    \item Domain Name System (DNS): Provides resolution between domain names and ip addresses.
-    \item Public Key Infrastructure (PKI): Provides cryptographic binding between names and entities.
-\end{enumerate}
-
-Of course there are many more technologies involved in getting information from point A to point B, but these are the ones that make the global portion of the internet work. Any disruptions to these services, can cause major outages and other problems for larg parts of the global internet. These protocols an services have only evolved little, which on one hand is a testament to the relative foresight and designe rigour applied by their creators, on the other hand are they no longer up to task of managing todays scale and complexity of the global internet and the modern threat landscape. This becomes evident by the comparetativey low availablity of the internet. XY calculates the availability fo the internet at 99.9 \%. Which might seem high at first, but actually amounts to an average downtime of xx seconds per day. This is shockingly low compared to other infrastructure systems like the plain old telephone system, with an availability of 99.9999 \%. 
-
-The possible reasons why parts of the global internet or individual resources may be unreachable are manyfold however here are some major ones:
-
-\begin{itemize}
-    \item Denial of servica attacks
-    \item Disruptions in DNS
-    \item BGP route high jacking
-    \item BGP route missconfiguration
-    \item Physical route failures
-\end{itemize}
-
-The compromise or coruption of ceritificate authority and with it the compromise of the roots of trust which they provide do not directly impact the availabilty of the internet, however it has adverse effects on qualities, and needs mentioning in this context as well.
+In this paper we give an introduction to \textit{scalabilitiy, control, and isolation on next-generation networks} also known as \textit{ SCION }. A project which aims to provide a clean slate reengineering of the core interntet infrastructure, in order to solve some of the most pressing concerns which plague the modern global internet. This paper will outline inherent shortcommings of the current, mostly BPG based, internet architecture and examine how SCION proposes to solve said challanges. We will explore the concepts contained in the proposed solution as well, as comparing SCION to the BGP in multiple aspects. Our findigs will be present in a easy to read form for fellow professionals familiar with the fundamentals of networking, but unfamiliar with SCION, thus giving an introduction into the subjectmatter.
 
 \end{document}
