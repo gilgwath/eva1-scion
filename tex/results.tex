@@ -1,15 +1,15 @@
 \documentclass[../eva1_scion.tex]{subfiles}
 \begin{document}
-    \chapter{Results}
+    \section{Results}
     In this chapter we peresent the results of our literature reseach describe the current state of the proposed SCION architecture. We examine the anatomy of \textit{Isolation Domains} (ISD) and elaborate how the SCION control and data plane work, as well as examining trust management in SCION and deployment status.
 
-    \section{Isolation Domains}
+    \subsection{Isolation Domains}
     SCION is designed for easy adoption by current BGP ASes, therefore it adopts and alters some ideas from BGP like the idea of an Autonomous System (AS) which, like in BGP, repesents the smalest organisational unit. However, SCION introduces an additonal organisational unit called the Isolation Domain (ISD). The structure of an indivual ISD is ilustrated in \ref{fig:isd}a. 
 
     An ISD shares a common set of operational rules and share a set of trust roots. It is expected that ISDs will grow along social, political and econmical borders and structures \cite{scion_2011}. Giving these technical implemtations a common legal and contractual framework and social context, from which enforcability and a meaningful (for humans) sense of trust can be derived. To emulate these realworld structures, SCION supports recursive ISDs  which inherint trust roots and rules from their parent ISDs \cite{scion_2011}. As an example one might imagine the tier-1 providers in a country forming the ISD core of a country level ISD, which is member of an ISD representing larger geopolitical entity like the EU. Inside a country there might be a group of ASes which have stronger requirements regarding security and trust than the rest the ISD, thus they may form a subISD inside the subISD of the country. One such example may be military and its associated organisations.
 
 
-    \subsection{IDS Structure}
+    \subsubsection{IDS Structure}
     As shown in ilustration \ref{fig:isd}a the main structure of an IDS is an undirected graph formed by a set of core ASes in the ISD core, client ASes and biderectional links between individual ASes. ASes may be connected by multiple redundant links. Although a link always carries biderctional traffic, there is an implied top down hirarchy of providers and consumers between the tiers in the graph. As in BGP a pair of ASes may enter an peering agreement, which is ilustrated is a dashed line. Links are also called path segments.
 
     An ISD core is comprised of multiple core ASes which form fully connected clique and a logical. The ISD core hosts numerous function such as the ISDs certificate authority, core beacon-, certificate-, path-, and address-servers.The ISD core also maintains the \textit{Trust Root Configuration} TRC. The ISD core also provides links to other ISDs. The requirement to become a core AS is usually sufficient size or importance to offer direct connections to other core ASes in other ISDs, as well as the ability to repicate the other core services listed above \cite{scion_2011}.
@@ -23,7 +23,7 @@
         \label{fig:isd}
     \end{figure}
 
-    \subsection{AS and ISD Componants}
+    \subsubsection{AS and ISD Componants}
 
     In the following we will explore the componantes which are required to run an SCION AS and by extension a ISD since an ISD usually replacates all or most core services for caching reasons.
 
@@ -35,10 +35,10 @@
 
     The \textit{Trust Root Configuratio} (TRC) is policy which governs the operations of an ISD. The TRC lists the trust roots used in an ISD and thus is the central anchor of trust in an ISD. It is negotiated between the members of the ISD core and all ASes whishing to join an ISD need to accept the TRC. Neighbouring ISDs acknowledge an ISDs TRC by signing it. This makes ASes communicting across ISD bordes able to trust signatures originating from an neighouring ISD. Each TRC also holds a number of policies on how the TRC is used and. Modifications to the TRC are only possible of multiple core ASes signe updated TRC, which prevents a rouge core AS from corupting the TRC. The number of required signatures for different kinds of changes is governed by the policies encoded in the TRC.
 
-    \section{Control Plane}
+    \subsection{Control Plane}
     Until now we looked at the static componants which make up an ISD, however the real world internet is not a static thing, so an ISD isn't either. To better manage complexity SCION is devided into a controll plane and a data plane. The control plane is concerned with discovering and maintaining paths, while the data plane uses these paths in the processes of path assembly and packet fowarding. This division not only isolates complexity, but also isolates failures. As long as there are paths available to forward packets on, the data plane can operate without disruption, even if parts of the control plane are disrupted.
 
-    \subsection{Path Discovery by Beaconing}\label{ssec:beaconing}
+    \subsubsection{Path Discovery by Beaconing}\label{ssec:beaconing}
     As mentioned above SCION has taken inspiration form BGP, the paths discovery mechanism is an other place where this is evident. Like in BGP, SCION uses a beaconing process to discover all available paths between ASes. However unlike in BGP in SCION beacons are not broadcast by every AS to every connected AS, also each AS has control over the paths by which paths it would like to by reachable. In BGP an AS has no control over which routes its neighbouring ASes propagate. Beacons in SCION are called \textit{Path-Segment Construction Beacon}s (PCB) and are  sent from beacon servers in the ISD core to travle down the ISD graph as an policy constrained multipath flood. \cite{scion_2011}.
 
     Initialy the path server in a core ISD issues a PCB containing only the exit interface it originates from and the current version number of the TRC. A path server in a neighbouring AS receiving an incomming CP will first check the validity of the beacon by checking its signature. Then it goes on to process the PCB. First of all the version number of the TRC is checked and if necessary fetch the new TRC from the AS it received the PCB from. After adding its own path information to the PCB, the beacon server forwards the PCB to all its client ASes \ref{scion_2011}.
@@ -50,18 +50,21 @@
     When selecting down-paths an AS tries to select as diverse paths as possible in order reach maximum redudancy. This makes SCION an ineherently multipathed system. Apart from path diversity, ASes can select for many different quality measure in their paths like low latency or anonymous forwarding capability along the whole path \cite{scion_2011}.
 
     So fare we have looked at intra ISD path discovery. Iter ISD path discovery works much the same way, however the PCBs are only forwarded between core ASes.
+    
+    \subsubsection{SCION Message Control Protocol}
+    The control plane comes with its own control protocol the \textit{SCION Message Control Protocol}. As its name allready suggests it operates quite similar to the allready established ICMP protocol and serves many of the same functions \cite{scion_2015}. One noteworthy aspect of SCMP is that, in contrast to its cousine, it is integerity protect. For efficiency reasons a MAC generated by a per-AS symetric key is perefered over digital signatures. In the event a transit AS needs to send e SCMP message to a source AS, the per-AS key is generated on demand using the \textit{Dynamically Recreatable Keys} (DRK) algorithm and common seceret key shared among the ISDs border routers. The source as (of the packet which caused the SCMP message) can then fetch the key from the transit AS sending the SCMP message, in case it does not already have it cached \cite{scion_2015}. 
 
-    \section{Data Plane}
+    \subsection{Data Plane}
     While the control plane deals with path discovery, the data plane deals with forwarding data packets. For this the data plane uses the path information supplied by the control plane to assemble paths.
 
-    \subsection{Packet Carried Forwarding State}\label{ssec:pcfs}
+    \subsubsection{Packet Carried Forwarding State}\label{ssec:pcfs}
     In SCION information needed to reach a forwarding descion for a given packet is stored in the packet itselfs. This is refered to as \textit{Package Carried Forwarding State} (PCFS) and several interessting properties of SCION are derived from this. Each packet at least contains a path, since source and destination adresses are optional, if the path is unambigous in its contetxt. Consequently, during forwarding, a router only needs to read the opaque field in the path and check its MAC in order to forward the packet to the next AS. Since all routing information is carried by the packet, the need for routing tables is completly eliminated.
 
     Scion splits the addressing information of a resource into a locator (the path) and an identifier (the destination address), which facilitates another interessting feature: Only the destanation AS needs to be able to interpret the destination address. This allows each AS to choos its own addressing schema. This means that e.g IPv4 and IPv6 hosts can talk directly to each other using SCION.
 
     The absence of routing tables simplyfies the routings process and thus allows the construction of simpler and more energy efficient machines. XY have observed a gain of xx  energy efficiency compared to traditional BGP routing. Thanks to hardware accelration of cryptographic opertions through technologies like Intel AES-NI, forwarding descissions in SCION become faster than in BGP. All a router needs to do is checking the validity of the path recorded in the packet and read the exit interface from it. If hardware acceleration is available the signature validition is so efficient, it out performs DRAM look-ups a BGP router needs to performe to reach its routing decission. 
 
-    \subsection{Path Combination} \label{ssec:path_assembly}
+    \subsubsection{Path Combination} \label{ssec:path_assembly}
     Path combination is the process performed by an end host to obtain valid path before sending a packet. Up to three path-segments are combined into an end-to-end path. First of all the end host looks up the AS and address of the destination with a name server. Then it queries a path server for a path to this destination. After the look-up process is complete one of five scenarios will play out, depending on where the destination is located:
 
     \begin{itemize}
@@ -74,7 +77,7 @@
 
     Once the host has constructed a path it is encoded as PCFS in the packet header. The destination host can either take the path contained it the received packet and simply reverse it, or performe its own lookup and combination process. Of course this process is assisted by varous cashing mechanisms.
 
-    \subsection{Source Routing}
+    \subsubsection{Source Routing}
 
 
     \section{Securtiy Properties}
@@ -94,14 +97,15 @@
         \item  \textbf{Trust oligopoly}: In this scenario there is a multitude of equally trusted roots of trust. An example for this is todays TLS PKI system. This scenario suffers from the fact that it exposes many points of failure and revoking keys is made dificult by the sheer amount of keys to manage.
     \end{itemize}
 
-    This is achivied by introducing a hirarchy of trust. \ref{scion_2011}. ASes use a number of different keys for different purposes and can replace the keys and employed algorithms autonomously, however the used keys always require a signature by a trust root. This enables neighbouring ASes and end host in different ASes or ISDs to check the validity of the keys and by extensions the data processed by these keys. The keys used for this signing are encoded in the TRC and are thus managed and protected by the ISD core.
+    This is achivied by introducing a hirarchy of trust. \cite{scion_2011}. ASes use a number of different keys for different purposes and can replace the keys and employed algorithms autonomously, however the used keys always require a signature by a trust root. This enables neighbouring ASes and end host in different ASes or ISDs to check the validity of the keys and by extensions the data processed by these keys. The keys used for this signing are encoded in the TRC and are thus managed and protected by the ISD core.
 
     In SCION trust is rooted in a small number of trust roots which are encoded in each ISDs TRC. This TRC is only valid inside the ISD it applies to, thus limiting the scope of trust to one ISD. Since linked ISDs signe each others TRCs trust is conveyed, by the transitive properties of trust, between ISDs. If an ISD revokes a trust roots key, all keys signed with it, become invalid at once. This change propagates quickly through the ISD own ASes as well as to neighbouring ISDs by the means of PCBs. From this a interessting property emerges: As long as there is a path available to a given resource, the path can always be validate.
 
-    \section{Efficiency and Scalability}
+    \section{SCION Extensions}
+    When SCION was first conceptualised the idea was to incorporate all needed features in a holistic designe.
 
     \section{SCION Adoption}
-    SCION is designed with easy adoption in mind and offeres a number of attractive benefits to adopters. Designe elements such as the use of existing ASes and isolating the inner structure of an AS from the SCION architecture are specifically targeted at easy adopotion of SCION. For an AS to adopt SCION it only needs to deploy border routes which are SCION capable, as well as deploying name, beacon, certificate and path servers. All these can run on comodity hardware or on existing routers and the rest of the AS can remain largely unchanged. Since core elements from BGP are adopted like ASes and beaconing, BGP routing policies can be fully expressed and even extended in SCION, further lower the bar of entry to adopting SCION \ref{scion_2017}
+    SCION is designed with easy adoption in mind and offeres a number of attractive benefits to adopters. Designe elements such as the use of existing ASes and isolating the inner structure of an AS from the SCION architecture are specifically targeted at easy adopotion of SCION. For an AS to adopt SCION it only needs to deploy border routes which are SCION capable, as well as deploying name, beacon, certificate and path servers. All these can run on comodity hardware or on existing routers and the rest of the AS can remain largely unchanged. Since core elements from BGP are adopted like ASes and beaconing, BGP routing policies can be fully expressed and even extended in SCION, further lower the bar of entry to adopting SCION \cite{scion_2017}
 
     Since 2016 a realworld SCION testbed called ScionLab is operational \cite{testbed_2020} which includes several high profile members such as Swisscom and Switch, as well as other financial instatution like SIX and the Swiss National Bank \cite{snb} and further acedemic institutions. Infact the as of 2020 the thes bed serves over 600 entities and spans a globalb network of 30 IDS.
 
