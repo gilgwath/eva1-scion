@@ -1,7 +1,7 @@
 \documentclass[../eva1_scion.tex]{subfiles}
 \begin{document}
     \chapter{Results}
-    In this chapter we describe the current state of the proposed SCION architecture. We examine the anatomy of \textit{Isolation Domains} (ISD) and elaborate how the SCION control and data plane work.
+    In this chapter we peresent the results of our literature reseach describe the current state of the proposed SCION architecture. We examine the anatomy of \textit{Isolation Domains} (ISD) and elaborate how the SCION control and data plane work, as well as examining trust management in SCION and deployment status.
 
     \section{Isolation Domains}
     SCION is designed for easy adoption by current BGP ASes, therefore it adopts and alters some ideas from BGP like the idea of an Autonomous System (AS) which, like in BGP, repesents the smalest organisational unit. However, SCION introduces an additonal organisational unit called the Isolation Domain (ISD). The structure of an indivual ISD is ilustrated in \ref{fig:isd}a. 
@@ -19,7 +19,7 @@
     \begin{figure}[ht]
         \centering
         \includegraphics[width=0.8\linewidth]{scion_isd.png}
-        \caption{Internal structure of an ISD. From \cite{scion_2017}}%
+        \caption{Internal structure of an ISD. Image taken from \cite{scion_2017}}%
         \label{fig:isd}
     \end{figure}
 
@@ -27,7 +27,7 @@
 
     In the following we will explore the componantes which are required to run an SCION AS and by extension a ISD since an ISD usually replacates all or most core services for caching reasons.
 
-    SCION ASes look similar too their BGP cousins so fare as that they have internal routers and border routers and a set of routes through the AS. These ensure connectivity inside the AS and to neighbouring ASes. Border routers must be SCION capable and must addhere to the common rules agreed upon inside the ISD, however each AS is free to choos its internal structure. Such as the intra domain routing protocol and adressing schema. Initially SCION was designed to employ \textit{Accountable IP} (AIP) \cite{scion_2011, aip_2008} in all ASes, however this requirement was relaxed later in favour of interoperability and ease of adoption \cite{scion_2017}. Because of the way SCION fowards packets, there is also no need for a uniform addressing schema between ASes (see \ref{sec:data_plane}).
+    SCION ASes look similar too their BGP cousins so fare as that they have internal routers and border routers and a set of routes through the AS. These ensure connectivity inside the AS and to neighbouring ASes. Border routers must be SCION capable and must addhere to the common rules agreed upon inside the ISD, however each AS is free to choos its internal structure. Such as the intra domain routing protocol and adressing schema. Initially SCION was designed to employ \textit{Accountable Internet Protocol} (AIP) \cite{scion_2011, aip_2008} in all ASes, however this requirement was relaxed later in favour of interoperability and ease of adoption \cite{scion_2015}. Because of the way SCION fowards packets, there is also no need for a uniform addressing schema between ASes (see \ref{sec:data_plane}).
 
     In addition each AS needs at least a beacon server, a certificate server and a path server. Beacon servers are responbsible for path discovery and are required for beaconing process described in section \ref{ssec:beaconing}. Path server are repsonsible for caching and disimination of path information. They are involved in path resolution and assembly discussed in section \ref{ssec:path_assembly}. As SCION makes extensive us of certificates to validate paths and entities \cite{scion_2011}, certificate servers are deployed to cache and provide certificates in an AS.
 
@@ -77,10 +77,16 @@
     \subsection{Source Routing}
 
 
-    \section{Trust Management}
+    \section{Securtiy Properties}
+
+    \subsection{Isolation of Attacks}
+    SCION carves the global internet up into smaller selfcontained units through ISDs and even these can be devided up by the support of subISDs. This by itself allready provides a significant advantage, since all entities outside an ISD can not influence the path discovery process (see section \ref{ssec:path_discovery}). The compromise of trust roots is isolted to an ISD as well and may not affect other ASes in other ISDs.
+
+    Attacks are further isolated in that no AS can influence the path construction process (see section \ref{ssec:path_assembly}) taking place on a endhost. A malicous AS can only announce down-paths to reach that malicous as. 
+
+    \subsection{Trust Management and Trust Agility}
     As stated in the introduction trust management is a hard problem to solve and SCION takes a few important steps towords solving this problem. First of all the architecture limits the scope of trust to a smaler set of trustees by introducing ISDs, secondly it reduces the number of trust roots to a managable number. \ref{scion_2011} This makes key revocatio, or certificate revocation respectively, much easier, since there is no need for every single endhost on the whole internet to be informed indivdually. SCION also makes extensive use of trust transitivity offered by digital signatures.
 
-    \subsection{Trust Agility}
     Trust agility is the concept that the user can choos which roots of trust they relay upon and that they can revoke their trust quickly and effectivey if an entity is compromised. This requires simple and quick key revocation process. SCION aimes to provide this by effectively avoiding two secnerios:
 
     \begin{itemize}
