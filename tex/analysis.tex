@@ -1,11 +1,11 @@
 \documentclass[../eva1_scion.tex]{subfiles}
 \begin{document}
-\chapter{Problem Analysis}\label{ch:analysis}
+\section{Problem Analysis}\label{sec:analysis}
 
 In this chapter we will analyse the current structure of the global internet architecture and point out it current flaws and challenges. We establish a set of quality metrics we expect from the global internet to meet our modern needs
 
-\section{The Global Internet}%
-\label{sec:the_global_internet}
+\subsection{The Global Internet}%
+\label{ssec:the_global_internet}
 
 Many protocols and technologies are involved in transporting information from point A to point B in a computer network. However, the core protocols and services which are responsible for inter AS  communication thus constitute what we will call the global internet, may be narrowed down to the following:
 
@@ -16,8 +16,7 @@ Many protocols and technologies are involved in transporting information from po
     \item TLS Public Key Infrastructure (PKI): Provides cryptographic binding between names and an entities public keys.
 \end{itemize}
 
-\section{Quality Metrics}%
-\label{sec:quality_metrics}
+\subsection{Quality Metrics}\label{ssec:quality_metrics}
 
 Now that we know what set of technologies we include in the discussion, it must also be definded what measures of quality we are concerned with and what the expectations are regarding these quality measures. Here again there are plenty of metrics to choose from. First and foremost we want to have availability - if a resource is unreachable, all bets are off. As a reference point for availablity in a vital cummications system we might look at the \textit{plain old telephon systems} (POTS). Its availablilty is generally estimated to be around 99.999 \% NEEDS REF.
 
@@ -27,8 +26,8 @@ Once trust is established we would like to ensure that communictain paths can no
 
 The possible reasons why the above qualities may be degraded are manyfold, but here are the ones that are at play on a global scale:
 
-\section{Shortcommings of the Current Internet Infrastructure}%
-\label{sec:shortcommings}
+\subsection{Shortcommings of the Current Internet Infrastructure}%
+\label{ssec:shortcommings}
 
 There are many factors that can degrade the service quality we expect from our internet connections, however the following are the main issues which can and do affect the global internet on a daly basis.
 

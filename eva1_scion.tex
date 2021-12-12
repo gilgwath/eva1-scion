@@ -4,7 +4,6 @@
 
 \usepackage{mystyle}
 
-
 \begin{document}
 
     \subfile{tex/titlepage}
@@ -28,14 +27,14 @@
     \subfile{tex/related}
     \subfile{tex/conclusion}
 
-    \chapter{Indicies}
+    \section{Indicies}
     \begingroup
         \let\clearpage\relax
-	\addcontentsline{toc}{section}{Literature}
+	\addcontentsline{toc}{subsection}{Literature}
         \printbibliography
-	\addcontentsline{toc}{section}{\listfigurename}
+	\addcontentsline{toc}{subsection}{\listfigurename}
         \listoffigures
-	\addcontentsline{toc}{section}{\listtablename}
+	\addcontentsline{toc}{subsection}{\listtablename}
         \listoftables
         \let\clearpage\relax
     \endgroup
