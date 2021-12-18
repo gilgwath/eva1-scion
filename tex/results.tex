@@ -9,6 +9,12 @@
 
             An ISD shares a common set of operational rules and a set of trust roots. It is expected that ISDs will grow along social, political and economical borders and structures \cite{scion_2011}. Landing the technical implementation of an ISD a common legal and contractual framework and social context, from which enforceability and a (for humans) meaningful sense of trust can be derived. To emulate these real-world structures, SCION supports recursive ISDs  which inherit trust roots and rules from their parent ISDs \cite{scion_2011}. As an example, one might imagine the tier-1 providers in a country forming the ISD core of a country level ISD, which is a member of an ISD representing a larger geopolitical entity like the EU. Inside a country, there might be a group of ASes which have stronger requirements regarding security and trust than the rest of the ISD; thus they may form a subISD inside the subISD of the country. One such example may be military and its associated organizations.
 
+    \begin{figure}[ht]
+        \centering
+        \includegraphics[width=0.8\linewidth]{scion_topology.png}
+        \caption{A hypothetical topology of ISDs each with their ISD core and member ASes. Image taken from \cite{scion_2015}}%
+        \label{fig:isd_topology}
+    \end{figure}
 
     \subsubsection{IDS Structure} \label{sssec:isd_structure}
     As shown in illustration \ref{fig:isd}a the main structure of an IDS is an undirected graph formed by a set of core ASes in the ISD core, client ASes, and bidirectional links between individual ASes. ASes may be connected by multiple redundant links. Although a link always carries bidirectional traffic, there is an implied top down hierarchy of providers and consumers between the tiers in the graph. As in BGP a pair of ASes may enter a peering agreement, which is illustrated is a dashed line. Links are also called path segments.
@@ -17,12 +23,6 @@
 
     An unassociated AS can join an existing ISD by purchasing connectivity from an ISD which is already member of a given ISD. This requires the joining AS to accept the TRC and operational rules of the ISD it wishes to join. Each AS can be a member of multiple ISDs.
 
-    \begin{figure}[ht]
-        \centering
-        %\includegraphics[width=0.8\linewidth]{scion_topology.png}
-        \caption{A hypothetical topology of ISDs each with their ISD core and member ASes. Image taken from \cite{scion_2017}}%
-        \label{fig:isd_topology}
-    \end{figure}
     \subsubsection{AS and ISD Components} \label{sssec:as_componants}
 
     In the following we will explore the components which are required to run an SCION AS and by extension an ISD since each AS usually replicates all or most core services for caching purposes.
@@ -50,7 +50,7 @@
     \begin{figure}[ht]
         \centering
         \includegraphics[width=0.8\linewidth]{scion_isd.png}
-        \caption{Internal structure of an ISD. Image taken from \cite{scion_2017}}%
+        \caption{Internal structure of an ISD. Image taken from \cite{scion_2015}}
         \label{fig:isd}
     \end{figure}
 
